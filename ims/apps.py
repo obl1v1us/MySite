@@ -2,4 +2,4 @@ from django.apps import AppConfig
 
 
 class ImsConfig(AppConfig):
-    name = 'IMS'
+    name = 'ims'

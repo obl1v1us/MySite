@@ -22,21 +22,28 @@ class Store(models.Model):
     )
     
     def __str__(self):
-        return self.store_id
+        return_val = self.store_id.__str__() + ": " + self.store_name
+        return return_val
 
 # Many items can belong in an inventory (InventoryItem)
 class Item(models.Model):
     sku =  models.IntegerField(primary_key=True)
     item_name = models.CharField(max_length=30)
+    
+    """TODO Change this to a value restricted to a dollar amount"""
     cost = models.IntegerField()
+    
+    def __str__(self):
+        return_val = self.sku.__str__() + ": " + self.item_name
+        return return_val
         
 # Inventory items have an Item, a Store it belongs to, and a qty in that store
 class InventoryItem(Item):
     inv_item = models.ForeignKey(Item, on_delete=models.CASCADE,
-                                  related_name="inv_item")
+                                  related_name="inv_item_rel")
     _quantity = models.IntegerField()
     store_id = models.ForeignKey(Store, on_delete=models.CASCADE,
-                                 related_name="store_id")
+                                 related_name="store_id_rel")
     
     # The set of inventory item and store id is the primary key
     class Meta:
