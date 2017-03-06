@@ -1,0 +1,9 @@
+{% if manager_list %}
+    <ul>
+    {% for manager in manager_list %}
+        <li>{{ manager }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No Managers.</p>
+{% endif %}
