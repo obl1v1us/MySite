@@ -2,7 +2,7 @@ from django.http import HttpResponse, HttpResponseRedirect#, Http404
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.views import generic
-from .models import Store, Item, Manager
+from .models import Store, Item, Manager, StoreItem
 
 
 class StoreView(generic.ListView):
@@ -29,3 +29,11 @@ class ManagerView(generic.ListView):
     def get_queryset(self):
         """Returns the list of items in the entire system"""
         return Manager.objects.order_by('manager_id')
+    
+class StoreItemView(generic.ListView):
+    template_name= 'ims/storeitems.html'
+    context_object_name='storeitems_list'
+    
+    def get_queryset(self):
+        return StoreItem.objects.order_by('store', 'item')
+    

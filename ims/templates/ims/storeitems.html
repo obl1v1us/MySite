@@ -1,0 +1,9 @@
+{% if storeitems_list %}
+    <ul>
+        {% for storeitem in storeitems_list %}
+               <li> {{ storeitem }} - {{ storeitem.qty }}</li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No StoresItems.</p>
+{% endif %}

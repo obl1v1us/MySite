@@ -38,10 +38,10 @@ class Store(models.Model):
     items = models.ManyToManyField(Item, through='StoreItem')
     
     def __str__(self):
-        return_val = self.store_id.__str__() + ": " + self.store_name
+        return_val = self.store_id.__str__() + ": " + self.store_name.__str__()
         return return_val
     
-    #TODO Create a modified create to add all items to stores on creation?
+    # TODO Create a modified create to add all items to stores on creation?
     
 # store Items are an intermediate field that manages the 
 class StoreItem(models.Model):
@@ -63,9 +63,10 @@ class StoreItem(models.Model):
         return return_val
     
     def __str__(self):
-        return (self.store, self.item)
+        return_val = self.store.__str__() + " - " + self.item.__str__()
+        return return_val
     
-    #TODO Create internal method to populate a given store with all items?
+    # TODO Create internal method to populate a given store with all items?
     
 # DEPRECATED, Does not work
 '''
