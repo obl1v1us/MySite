@@ -10,7 +10,9 @@ class Manager(models.Model):
         return_val = self.manager_id.__str__() + ": " + self.fname + \
             " " + self.lname
         return return_val
-
+    
+    def __unicode__(self):
+        return self.name
 
 # Many items can belong in an inventory (InventoryItem)
 class Item(models.Model):
@@ -24,8 +26,11 @@ class Item(models.Model):
         return_val = self.sku.__str__() + ": " + self.item_name
         return return_val
     
-# Stores are managed by a StoreItem
-# Stores have items (InventoryItem)
+    def __unicode__(self):
+        return self.name
+    
+# Stores are managed by a Manager
+# Stores have items (through StoreItem)
 class Store(models.Model):
     store_id = models.AutoField(primary_key=True)
     store_name = models.CharField(max_length=30)
@@ -41,9 +46,12 @@ class Store(models.Model):
         return_val = self.store_id.__str__() + ": " + self.store_name.__str__()
         return return_val
     
+    def __unicode__(self):
+        return self.name
     # TODO Create a modified create to add all items to stores on creation?
     
-# store Items are an intermediate field that manages the 
+# store Items are an intermediary field that manages the items within
+# a store
 class StoreItem(models.Model):
     store = models.ForeignKey(Store, on_delete=models.CASCADE)
     item = models.ForeignKey(Item, on_delete=models.CASCADE)

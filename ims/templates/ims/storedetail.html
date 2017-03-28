@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<h1>{{ store.store_name }}</h1>
+<h2>{{ store.store_manager }}</h2>
+<h3>Store Inventory</h3>
+{{ items }}
+<ul>
+    {% for storeitem in store.storeitem_set.all %}
+        <li>{{ storeitem.item }} - {{ storeitem.quantity }}</li>
+    {% endfor %}
+</ul>
