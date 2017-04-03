@@ -1,8 +1,10 @@
-from django.http import HttpResponse, HttpResponseRedirect#, Http404
+#from django.http import HttpResponse, HttpResponseRedirect#, Http404
 from django.shortcuts import get_object_or_404, render, render_to_response
-from django.urls import reverse
+#from django.urls import reverse
 from django.views import generic
+from django.forms import modelformset_factory
 from .models import Store, Item, Manager, StoreItem
+from .forms import StoreItemsForm
 
 
 class StoreView(generic.ListView):
@@ -22,7 +24,20 @@ def storedetail(request, store_id):
     store = get_object_or_404(Store, pk=store_id)
     return render_to_response('ims/storedetail.html',
                                {'store': store})
-    
+
+def storeitemsform(request):
+    StoreItemsFormSet = modelformset_factory(StoreItem, extra=0, form=StoreItemsForm)
+    if (request.method == 'POST'):
+        #POSTING A FORM
+        siformset = StoreItemsFormSet(request.POST)
+        if siformset.is_valid():
+            siformset.save()
+            #RETURN TO STORE DETAIL PAGE
+    else:
+        siformset = StoreItemsFormSet()
+    return render(request, 'ims/storeitemsform.html',
+                                {'siformset' : siformset})
+                            
 class ItemView(generic.ListView):
     template_name = 'ims/itemlist.html'
     context_object_name= 'item_list'

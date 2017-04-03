@@ -1,4 +1,5 @@
 from django.db import models
+from django.forms.models import ModelForm
 
 # A manager takes care of a store
 class Manager(models.Model):
@@ -55,7 +56,7 @@ class Store(models.Model):
 class StoreItem(models.Model):
     store = models.ForeignKey(Store, on_delete=models.CASCADE)
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
-    _qty = models.IntegerField()
+    qty = models.IntegerField()
     
     @property
     def quantity(self):
@@ -75,7 +76,7 @@ class StoreItem(models.Model):
         return return_val
     
     # TODO Create internal method to populate a given store with all items?
-    
+        
 # DEPRECATED, Does not work
 '''
 class InventoryItem(models.Model):

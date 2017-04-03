@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<h1>Store Items as a form (DEBUG)</h1>
+    <form method="POST" action="">{% csrf_token %}
+        {{ siformset.management_form }}
+        {% for form in siformset %}
+            {{ form.instance.store }} : {{ form.instance.item }} : {{ form }}
+        <p />
+        {% endfor %}
+        <p />
+        <button type="submit" class="save btn btn-default">Save</button>
+    </form>
+<p> NOTHING TO SEE HERE </p>
