@@ -55,8 +55,7 @@ def storerecount(request, store_num):
     # 
         siformset = StoreItemsFormSet(queryset=StoreItem.objects.filter(store_id=store_num))
     return render(request, 'ims/storerecount.html',
-                                {'siformset' : siformset},
-                                {'store' : store})
+                                {'siformset' : siformset, 'store' : store})
                             
 class ItemView(generic.ListView):
     template_name = 'ims/itemlist.html'
