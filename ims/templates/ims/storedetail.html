@@ -1,10 +1,37 @@
-<!DOCTYPE html>
-<h1>{{ store.store_name }}</h1>
-<h2>{{ store.store_manager }}</h2>
-<h3>Store Inventory</h3>
-{{ items }}
-<ul>
-    {% for storeitem in store.storeitem_set.all %}
-        <li>{{ storeitem.item }} - {{ storeitem.quantity }}</li>
-    {% endfor %}
-</ul>
+{% extends 'ims/base.html' %}
+
+{% load staticfiles %}
+{% block specificheaders %}
+    <link rel="stylesheet" href="{% static 'css/itemtable.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1><a href="">{{ store.store_name }}</a></h1>
+    {% if store.store_manager %}
+        <h2><a href="">{{ store.store_manager }}</a></h2>
+    {% else %}
+        <h2><a href="">No manager</a></h2>
+    {% endif %}
+</div>
+
+<div class="content">
+    <h3><a href="count/">Recount Inventory</a></h3>
+    <div class="items-table">
+        <table>
+            <div class="row-header">
+                <tr>
+                    <th>Item Name</th>
+                    <th>Quantity</th>
+                </tr>
+            </div>
+            {% for storeitem in store.storeitem_set.all %}
+            <div class="row"><tr>
+                <td><a href="">{{ storeitem.item }}</a></td>
+                <td>{{ storeitem.quantity }}</td>
+            </tr></div>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+{% endblock %}

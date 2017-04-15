@@ -1,15 +1,18 @@
 from django.db import models
-from django.forms.models import ModelForm
+# from django.forms.models import ModelForm
 
 # A manager takes care of a store
 class Manager(models.Model):
+    # Manager's ID is the primary key
     manager_id = models.IntegerField(primary_key=True)
+    # Manager's First Name
     fname = models.CharField(max_length=50)
+    # Manager's Last Name
     lname = models.CharField(max_length=50)
-    # Managers can exist without a store
+    
+    # A managers casted to a string is "Fname Lname"
     def __str__(self):
-        return_val = self.manager_id.__str__() + ": " + self.fname + \
-            " " + self.lname
+        return_val = self.fname + " " + self.lname
         return return_val
     
     def __unicode__(self):
@@ -17,65 +20,81 @@ class Manager(models.Model):
 
 # Many items can belong in an inventory (InventoryItem)
 class Item(models.Model):
+    # Item's SKU number is the primary key
     sku =  models.IntegerField(primary_key=True)
+    # Name of the item restricted to 30 chars
     item_name = models.CharField(max_length=30)
-    
     """TODO Change this to a value restricted to a dollar amount"""
+    #The cost of the item
     cost = models.IntegerField()
     
+    # An Item casted to a string is just its name
     def __str__(self):
-        return_val = self.sku.__str__() + ": " + self.item_name
-        return return_val
+        return self.item_name
     
     def __unicode__(self):
         return self.name
     
 # Stores are managed by a Manager
-# Stores have items (through StoreItem)
+# Stores contain items (through StoreItem)
 class Store(models.Model):
+    # Store ID number is the Primary key (auto filled)
     store_id = models.AutoField(primary_key=True)
+    # Store name restricted to 30 chars
     store_name = models.CharField(max_length=30)
+    # Store manager - One to One relationship
     store_manager = models.OneToOneField(
         Manager,
         # Stores don't need a manager 
         blank = True, null = True,
         on_delete = models.CASCADE
     )
+    # Items and Stores have a many-to-many relationship through the StoreItem
+    # class. This allows a combination of store/item to remain unique, and contain
+    # more information such as quantity
     items = models.ManyToManyField(Item, through='StoreItem')
     
+    # A store turned to string is just the store's name
     def __str__(self):
-        return_val = self.store_id.__str__() + ": " + self.store_name.__str__()
-        return return_val
+        return self.store_name
     
     def __unicode__(self):
         return self.name
-    # TODO Create a modified create to add all items to stores on creation?
+    '''TODO Create a modified __init__ to add all items to stores on creation'''
     
-# store Items are an intermediary field that manages the items within
-# a store
+# StoreItems are an intermediary field that manages the items within a store
 class StoreItem(models.Model):
+    # each of these links two foreign keys (Store, Item) to a single StoreItem
+    # row in the table. 
     store = models.ForeignKey(Store, on_delete=models.CASCADE)
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    # represents the quantity an item has at a particular store
     qty = models.IntegerField()
     
+    # These will be used by function calls in other classes to change a item's 
+    # quantity.
     @property
     def quantity(self):
         # Get the current value of quantity
-        return self._qty
+        return self.qty
     
+    # A quantity setter that changes the value while returning a variance
     @quantity.setter
     def quantity(self, value):
-        # Set the current value of quantity, return a variance
-        return_val = self._qty - value
+        # find the variance
+        return_val = self.qty - value
         # TODO Check for negative values, null values??
+        # set the new quantity
         self._quantity = value
+        # return the variance
         return return_val
     
+    # Defines how a StoreItem looks. Typically not used except in debugg
     def __str__(self):
         return_val = self.store.__str__() + " - " + self.item.__str__()
         return return_val
     
-    # TODO Create internal method to populate a given store with all items?
+    '''TODO Create internal method to populate a given store with all items?'''
         
 # DEPRECATED, Does not work
 '''

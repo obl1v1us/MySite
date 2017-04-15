@@ -1,10 +1,19 @@
-<!DOCTYPE html>
-{% if store_list %}
-    <ul>
-        {% for store in store_list %}
-        <li><a href="{% url 'ims:storedetailview' store.store_id %}">{{ store }}</a></li>
-    {% endfor %}
-    </ul>
-{% else %}
-    <p>No Stores.</p>
-{% endif %}
+{% extends 'ims/base.html' %}
+{% block content %}
+<div class="content">
+    <div class="page-header">
+        <h1>Store list</h1>
+    </div>
+    {% if store_list %}
+        <div class="list">
+        <ul>
+            {% for store in store_list %}
+            <li><h3><a href="{% url 'ims:storedetail' store.store_id %}">{{ store }}</a></h3></li>
+        {% endfor %}
+        </ul>
+        </div>
+    {% else %}
+        <p>No Stores.</p>
+    {% endif %}
+</div>
+{% endblock %}

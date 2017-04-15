@@ -1,10 +1,20 @@
-<!DOCTYPE html>
-{% if manager_list %}
-    <ul>
-    {% for manager in manager_list %}
-        <li>{{ manager }}</li>
-    {% endfor %}
-    </ul>
-{% else %}
-    <p>No Managers.</p>
-{% endif %}
+{% extends 'ims/base.html' %}
+
+{% block content %}
+<div class="content">
+    <div class="page-header">
+        <h1>Store Managers</h1>
+    </div>
+    {% if manager_list %}
+        <div class="list">
+            <ul>
+            {% for manager in manager_list %}
+                <li><h2>{{ manager }}</h2></li>
+            {% endfor %}
+            </ul>
+        </div>
+    {% else %}
+        <p>No Managers.</p>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html>
+    <head>
+        <title>Inventory Management</title>
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+        
+        <link href="https://fonts.googleapis.com/css?family=Libre+Baskerville|Libre+Franklin" rel="stylesheet">
+        
+        <link rel="stylesheet" href="{% static 'css/base.css' %}">
+        <link rel="stylesheet" href="{% static 'css/base_heads.css' %}">
+        {% block specificheaders %}
+        {% endblock %}
+    </head>
+    <body>
+    
+        <div class="page-title">
+            <h1><a href="">Inventory Management</a></h1>
+            <table>
+                <tr>
+                    <td><a href="/ims/stores">Store List</a></td>
+                    <td><a href="/ims/managers">Manager List</a></td>
+                    <td><a href="/ims/items">Items List</a></td>
+                    <td><a href="/admin/ims/">Admin Menu</a></td>
+                </tr>
+            </table>
+        </div>
+        {% block content %}
+        {% endblock %}
+    </body>
+</html>

@@ -14,19 +14,17 @@ class StoreView(generic.ListView):
     def get_queryset(self):
         """Return the list of stores"""
         return Store.objects.order_by('store_id')
-'''
-class StoreDetail(generic.DetailView):
-    model = Store
-    template_name = 'ims/storedetail.html'
-'''
+
 
 def storedetail(request, store_id):
     store = get_object_or_404(Store, pk=store_id)
     return render_to_response('ims/storedetail.html',
                                {'store': store})
 
+#DEBUG
 def storeitemsform(request):
-    StoreItemsFormSet = modelformset_factory(StoreItem, extra=0, form=StoreItemsForm)
+    StoreItemsFormSet = modelformset_factory(StoreItem, extra=0, 
+                                             form=StoreItemsForm)
     if (request.method == 'POST'):
         #POSTING A FORM
         siformset = StoreItemsFormSet(request.POST)
@@ -35,8 +33,30 @@ def storeitemsform(request):
             #RETURN TO STORE DETAIL PAGE
     else:
         siformset = StoreItemsFormSet()
-    return render(request, 'ims/storeitemsform.html',
+    return render(request, 'ims/storerecount.html',
                                 {'siformset' : siformset})
+    
+def storerecount(request, store_num):
+    StoreItemsFormSet = modelformset_factory(StoreItem, 
+                                extra=0, form=StoreItemsForm)
+    # TODO get object or 404
+    store = Store.objects.get(store_id=store_num)
+    
+    if (request.method == 'POST'):
+        #POSTING A FORM
+        siformset = StoreItemsFormSet(request.POST,
+                                queryset=StoreItem.objects.filter(store_id=store_num))
+        if siformset.is_valid():
+            #TODO Add testing here
+            siformset.save()
+            return render_to_response('ims/storedetail.html',
+                               {'store': store})
+    else:
+    # 
+        siformset = StoreItemsFormSet(queryset=StoreItem.objects.filter(store_id=store_num))
+    return render(request, 'ims/storerecount.html',
+                                {'siformset' : siformset},
+                                {'store' : store})
                             
 class ItemView(generic.ListView):
     template_name = 'ims/itemlist.html'

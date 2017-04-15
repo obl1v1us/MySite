@@ -1,0 +1,47 @@
+{% extends 'ims/base.html' %}
+{% load staticfiles %}
+
+{% block specificheaders %}
+    <link rel="stylesheet" href="{% static 'css/itemtable.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1><a href="">{{ siformset.store.store_name }}</a></h1>
+    {% if siformset.instance.store_manager %}
+        <h2><a href="">{{ store.store_manager }}</a></h2>
+    {% else %}
+        <h2><a href="">No manager</a></h2>
+    {% endif %}
+    <h1>Inventory Adjustment</h1>
+</div>
+
+<div class="content">
+    <div class="items-table">
+        <table>
+            <div class="row-header">
+                <tr>
+                        <th>Item Name</th>
+                        <th>Quantity</th>
+                </tr>
+            </div>
+            <form method="POST" action="">{% csrf_token %}
+                {{ siformset.management_form }}
+                {% for form in siformset %}
+                    <div class="row"><tr>
+                    {{ form.id }}
+                        <td>{{ form.instance.item }} </td>
+                        <td>{{ form.qty }}</td>
+                    </tr></div>
+                {% endfor %}
+                <tr>
+                <td></td>
+                <td>
+                    <button type="submit" class="save btn btn-default">Save</button>
+                </td>
+                </tr>
+            </form>
+        </table>
+    </div>
+</div>
+{% endblock %}

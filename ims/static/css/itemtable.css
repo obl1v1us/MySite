@@ -1,0 +1,24 @@
+@import url('colors.css');
+
+.items-table table, .items-table th, .items-table td {
+    border: 1px solid navy;
+}
+
+.items-table table {
+    border-collapse: collapse;
+    width: 80%;
+}
+
+.items-table th, .items-table td {
+    text-align: left;
+    padding: 8px;
+}
+
+.items-table tr:nth-child(odd){
+    background-color: var(--primary-2);
+}
+
+.items-table th {
+    background-color: var(--primary-3);
+    color: white;
+}
