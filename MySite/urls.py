@@ -20,4 +20,5 @@ urlpatterns = [
     url(r'^ims/', include('ims.urls')),
     url(r'^polls/', include('polls.urls')),
     url(r'^admin/', admin.site.urls),
+    url('^accounts/', include('django.contrib.auth.urls')),
 ]
