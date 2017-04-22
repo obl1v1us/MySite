@@ -5,6 +5,7 @@ from django.views import generic
 from django.forms import modelformset_factory
 from .models import Store, Item, Manager, StoreItem
 from .forms import StoreItemsForm
+from django.contrib.auth.decorators import login_required
 
 
 class StoreView(generic.ListView):
@@ -16,6 +17,7 @@ class StoreView(generic.ListView):
         return Store.objects.order_by('store_id')
 
 
+@login_required
 def storedetail(request, store_id):
     store = get_object_or_404(Store, pk=store_id)
     return render_to_response('ims/storedetail.html',
@@ -35,7 +37,8 @@ def storeitemsform(request):
         siformset = StoreItemsFormSet()
     return render(request, 'ims/storerecount.html',
                                 {'siformset' : siformset})
-    
+
+@login_required
 def storerecount(request, store_num):
     StoreItemsFormSet = modelformset_factory(StoreItem, 
                                 extra=0, form=StoreItemsForm)

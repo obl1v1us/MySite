@@ -25,7 +25,14 @@
                     <td><a href="/admin/ims/">Admin Menu</a></td>
                 </tr>
             </table>
-            {# INSERT LOGIN PAGE / USER INFO HERE %}
+            <ul>
+            {% if user.is_authenticated %}
+                <li>User: {{ user.get_username }}</li>
+                <li><a href="{% url 'logout'%}?next={{request.path}}">Logout</a></li>   
+            {% else %}
+                <li><a href="{% url 'login'%}?next={{request.path}}">Login</a></li>   
+           {% endif %}
+           </ul>
         </div>
         {% block content %}
         {% endblock %}
