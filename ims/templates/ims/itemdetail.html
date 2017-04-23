@@ -1,0 +1,13 @@
+{% extends 'ims/base.html' %}
+
+{% block content %}
+<div class="content">
+    <div class="page-header">
+        <h1><a href="">{{ item }}</a></h1>
+    </div>
+        <h3>SKU: {{ item.sku }}</h3>
+        <h3>Cost: ${{ item.cost }}</h3>
+        <h3>Description: </h3>
+        <p>{{ item.description }}</p>
+</div>
+{% endblock %}

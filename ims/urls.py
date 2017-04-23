@@ -20,6 +20,9 @@ urlpatterns = [
     # URL for a list of all managers
     url(r'^managers/$', views.ManagerView.as_view(), name='managers'),
     
+    # Details for a particular Item
+    url(r'^items/(?P<item_id>[0-9]+)/', views.itemdetail, name='itemdetail'),
+    
     # URL for a list of all items
     url(r'^items/$', views.ItemView.as_view(), name='items'),
     

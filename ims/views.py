@@ -1,6 +1,4 @@
-#from django.http import HttpResponse, HttpResponseRedirect#, Http404
-from django.shortcuts import get_object_or_404, render, render_to_response, HttpResponseRedirect
-#from django.urls import reverse
+from django.shortcuts import get_object_or_404, render, HttpResponseRedirect
 from django.views import generic
 from django.forms import modelformset_factory
 from django.forms.models import inlineformset_factory
@@ -22,8 +20,7 @@ class StoreView(generic.ListView):
 @login_required
 def storedetail(request, store_id):
     store = get_object_or_404(Store, pk=store_id)
-    # TODO check if the current user has access
-    return render_to_response('ims/storedetail.html',
+    return render(request, 'ims/storedetail.html',
                                {'store': store})
 
 #DEBUG
@@ -56,7 +53,7 @@ def storerecount(request, store_num):
         if siformset.is_valid():
             #TODO Add testing here
             siformset.save()
-            return render_to_response('ims/storedetail.html',
+            return render(request, 'ims/storedetail.html',
                                {'store': store})
     else:
     # 
@@ -119,9 +116,15 @@ def edit_manager(request, pk):
     else:
         raise PermissionDenied
 
+#DEBUG
 class StoreItemView(generic.ListView):
     template_name= 'ims/storeitems.html'
     context_object_name='storeitems_list'
     
     def get_queryset(self):
         return StoreItem.objects.order_by('store', 'item')
+
+def itemdetail(request, item_id):
+    item = get_object_or_404(Item, sku=item_id)
+    return render(request, 'ims/itemdetail.html',
+                               {'item': item})

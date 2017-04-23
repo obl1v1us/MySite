@@ -27,9 +27,9 @@
             </div>
             {% for storeitem in store.storeitem_set.all %}
             <div class="row"><tr>
-                <td><a href="">{{ storeitem.item }}</a></td>
+                <td><a href="{% url 'ims:itemdetail' storeitem.item.sku %}">{{ storeitem.item }}</a></td>
                 <td>{{ storeitem.quantity }}</td>
-                <td>{{ storeitem.item.cost }}</td>
+                <td>${{ storeitem.item.cost }}</td>
             </tr></div>
             {% endfor %}
         </table>
