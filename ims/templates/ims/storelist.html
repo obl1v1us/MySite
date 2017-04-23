@@ -1,19 +1,36 @@
 {% extends 'ims/base.html' %}
+
+{% load staticfiles %}
+{% block specificheaders %}
+    <link rel="stylesheet" href="{% static 'css/itemtable.css' %}">
+{% endblock %}
+
 {% block content %}
 <div class="content">
     <div class="page-header">
-        <h1>Store list</h1>
+        <h1>Store List</h1>
     </div>
-    {% if store_list %}
-        <div class="list">
-        <ul>
+    <div class="items-table">
+        <table>
+            <div class="row-header">
+                <tr>
+                    <th>Store Name</th>
+                    <th>Manager Name</th>
+                    <th>Address</th>
+                    <th>Phone Number</th>
+                </tr>
+            </div>
             {% for store in store_list %}
-            <li><h3><a href="{% url 'ims:storedetail' store.store_id %}">{{ store }}</a></h3></li>
-        {% endfor %}
-        </ul>
-        </div>
-    {% else %}
-        <p>No Stores.</p>
-    {% endif %}
+            <div class="row"><tr>
+                <td><a href="{% url 'ims:storedetail' store.store_id %}">{{ store }}</a></td>
+                <td>{{ store.store_manager }}</td>
+                <td>{{ store.address }}</td>
+                <td>{{ store.phone_number }}</td>
+            </tr></div>
+            {% endfor %}
+        </table>
+    </div>
 </div>
+
+
 {% endblock %}

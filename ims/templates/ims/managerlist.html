@@ -1,20 +1,35 @@
 {% extends 'ims/base.html' %}
 
+
+{% load staticfiles %}
+{% block specificheaders %}
+    <link rel="stylesheet" href="{% static 'css/itemtable.css' %}">
+{% endblock %}
+
 {% block content %}
 <div class="content">
     <div class="page-header">
-        <h1>Store Managers</h1>
+        <h1>Managers</h1>
     </div>
-    {% if manager_list %}
-        <div class="list">
-            <ul>
+    <div class="items-table">
+        <table>
+            <div class="row-header">
+                <tr>
+                    <th>Manager Name</th>
+                    <th>Hire Date</th>
+                    <th>E-Mail</th>
+                </tr>
+            </div>
             {% for manager in manager_list %}
-                <li><h2>{{ manager }}</h2></li>
+            <div class="row"><tr>
+                <td><a href="">{{ manager }}</a></td>
+                <td>{{ manager.hire_date }}</td>
+                <td>{{ manager.user.email }}</td>
+            </tr></div>
             {% endfor %}
-            </ul>
-        </div>
-    {% else %}
-        <p>No Managers.</p>
-    {% endif %}
+        </table>
+    </div>
 </div>
+
+
 {% endblock %}

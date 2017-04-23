@@ -1,19 +1,19 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
+import datetime
 # from django.forms.models import ModelForm
 
 ''' Managers manage a store
     They are defined and created by a User object initiation
 '''
-
 class Manager(models.Model):
     # Manager's ID is the primary key
     manager_id = models.AutoField(primary_key=True)
     # A Manager's user according to Django
     user = models.OneToOneField(User, related_name="user")
     # A manager's hire date
-    # hired = models.DateTimeField(blank=True, default='')
+    hire_date = models.DateTimeField(blank=True, default=datetime.datetime.now())
     # A managers casted to a string is the user's First name and Last name
     def __str__(self):
         return_val = self.user.first_name + " " + self.user.last_name
@@ -37,6 +37,7 @@ class Item(models.Model):
     """TODO Change this to a value restricted to a dollar amount"""
     #The cost of the item
     cost = models.IntegerField()
+    description = models.CharField(max_length=30, blank=True, default="DEFAULT DESCRIPTION")
     
     # An Item casted to a string is just its name
     def __str__(self):
@@ -59,6 +60,9 @@ class Store(models.Model):
         blank = True, null = True,
         on_delete = models.CASCADE
     )
+    address = models.CharField(blank=True, default="Dream St", max_length=100)
+    phone_number = models.CharField(blank=True, default="555-555-5555", max_length=20)
+    
     # Items and Stores have a many-to-many relationship through the StoreItem
     # class. This allows a combination of store/item to remain unique, and contain
     # more information such as quantity
@@ -71,7 +75,18 @@ class Store(models.Model):
     def __unicode__(self):
         return self.name
     '''TODO Create a modified __init__ to add all items to stores on creation'''
+
+# Adds all items into a store
+def create_store_inventory(sender, **kwargs):
+    new_store = kwargs["instance"]
+    if kwargs["created"]:
+        for item in Item.objects.all():
+            new_storeitem = StoreItem(store=new_store, item=item)
+            new_storeitem.save()
     
+post_save.connect(create_store_inventory, sender=Store)
+
+
 # StoreItems are an intermediary field that manages the items within a store
 class StoreItem(models.Model):
     # each of these links two foreign keys (Store, Item) to a single StoreItem
@@ -79,7 +94,7 @@ class StoreItem(models.Model):
     store = models.ForeignKey(Store, on_delete=models.CASCADE)
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
     # represents the quantity an item has at a particular store
-    qty = models.IntegerField()
+    qty = models.IntegerField(default=0)
     
     # These will be used by function calls in other classes to change a item's 
     # quantity.

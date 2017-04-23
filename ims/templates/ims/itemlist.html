@@ -1,20 +1,36 @@
 {% extends 'ims/base.html' %}
 
+{% load staticfiles %}
+{% block specificheaders %}
+    <link rel="stylesheet" href="{% static 'css/itemtable.css' %}">
+{% endblock %}
+
 {% block content %}
 <div class="content">
     <div class="page-header">
         <h1>Items List</h1>
     </div>
-    {% if item_list %}
-        <div class="list">
-            <ul>
+    <div class="items-table">
+        <table>
+            <div class="row-header">
+                <tr>
+                    <th>Sku</th>
+                    <th>Item Name</th>
+                    <th>Cost</th>
+                    <th>Description</th>
+                </tr>
+            </div>
             {% for item in item_list %}
-                <li><h3>{{ item }}</h3></li>
+            <div class="row"><tr>
+                <td>{{ item.sku }}</td>
+                <td><a href="">{{ item }}</a></td>
+                <td>${{ item.cost }}</td>
+                <td>{{ item.description }}</td>
+            </tr></div>
             {% endfor %}
-            </ul>
-        </div>
-    {% else %}
-        <p>No items.</p>
-    {% endif %}
+        </table>
+    </div>
 </div>
+
+
 {% endblock %}
