@@ -1,27 +1,37 @@
 from django.db import models
+from django.contrib.auth.models import User
+from django.db.models.signals import post_save
 # from django.forms.models import ModelForm
 
-# A manager takes care of a store
+''' Managers manage a store
+    They are defined and created by a User object initiation
+'''
+
 class Manager(models.Model):
     # Manager's ID is the primary key
-    manager_id = models.IntegerField(primary_key=True)
-    # Manager's First Name
-    fname = models.CharField(max_length=50)
-    # Manager's Last Name
-    lname = models.CharField(max_length=50)
-    
-    # A managers casted to a string is "Fname Lname"
+    manager_id = models.AutoField(primary_key=True)
+    # A Manager's user according to Django
+    user = models.OneToOneField(User, related_name="user")
+    # A manager's hire date
+    # hired = models.DateTimeField(blank=True, default='')
+    # A managers casted to a string is the user's First name and Last name
     def __str__(self):
-        return_val = self.fname + " " + self.lname
+        return_val = self.user.first_name + " " + self.user.last_name
         return return_val
     
-    def __unicode__(self):
-        return self.name
+        
+def create_manager(sender, **kwargs):
+    user = kwargs["instance"]
+    if kwargs["created"]:
+        new_manager = Manager(user=user)
+        new_manager.save()
+        
+post_save.connect(create_manager, sender=User)
 
 # Many items can belong in an inventory (InventoryItem)
 class Item(models.Model):
     # Item's SKU number is the primary key
-    sku =  models.IntegerField(primary_key=True)
+    sku =  models.AutoField(primary_key=True)
     # Name of the item restricted to 30 chars
     item_name = models.CharField(max_length=30)
     """TODO Change this to a value restricted to a dollar amount"""

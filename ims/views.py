@@ -1,11 +1,14 @@
 #from django.http import HttpResponse, HttpResponseRedirect#, Http404
-from django.shortcuts import get_object_or_404, render, render_to_response
+from django.shortcuts import get_object_or_404, render, render_to_response, HttpResponseRedirect
 #from django.urls import reverse
 from django.views import generic
 from django.forms import modelformset_factory
+from django.forms.models import inlineformset_factory
 from .models import Store, Item, Manager, StoreItem
-from .forms import StoreItemsForm
+from .forms import StoreItemsForm, UserForm
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.core.exceptions import PermissionDenied
 
 
 class StoreView(generic.ListView):
@@ -15,15 +18,16 @@ class StoreView(generic.ListView):
     def get_queryset(self):
         """Return the list of stores"""
         return Store.objects.order_by('store_id')
-
-
+    
 @login_required
 def storedetail(request, store_id):
     store = get_object_or_404(Store, pk=store_id)
+    # TODO check if the current user has access
     return render_to_response('ims/storedetail.html',
                                {'store': store})
 
 #DEBUG
+
 def storeitemsform(request):
     StoreItemsFormSet = modelformset_factory(StoreItem, extra=0, 
                                              form=StoreItemsForm)
@@ -75,7 +79,46 @@ class ManagerView(generic.ListView):
     def get_queryset(self):
         """Returns the list of managers in the entire system"""
         return Manager.objects.order_by('manager_id')
-    
+
+
+# Use this to grant each manager the ability to change their own names
+@login_required() # only logged in users should access this
+def edit_manager(request, pk):
+    # querying the User object with pk from url
+    user = User.objects.get(pk=pk)
+
+    # prepopulate UserProfileForm with retrieved user values from above.
+    user_form = UserForm(instance=user)
+
+    # Use inlineformset to include the user and manager in the same formset
+    ManagerInlineFormset = inlineformset_factory(User, Manager)
+    formset = ManagerInlineFormset(instance=user)
+
+    if request.user.is_authenticated() and request.user.id == user.id:
+        # The HTTP request has a completed form
+        if request.method == "POST":
+            # Process the first form to get a User formset
+            user_form = UserForm(request.POST, request.FILES, instance=user)
+            formset = ManagerInlineFormset(request.POST, request.FILES, instance=user)
+            # Check if the form is valid
+            if user_form.is_valid():
+                # Process the second form to get the Manager formset
+                created_user = user_form.save(commit=False)
+                formset = ManagerInlineFormset(request.POST, request.FILES, instance=created_user)
+
+                if formset.is_valid():
+                    created_user.save()
+                    formset.save()
+                    return HttpResponseRedirect('/accounts/profile/')
+
+        return render(request, "account/account_update.html", {
+            "noodle": pk,
+            "noodle_form": user_form,
+            "formset": formset,
+        })
+    else:
+        raise PermissionDenied
+
 class StoreItemView(generic.ListView):
     template_name= 'ims/storeitems.html'
     context_object_name='storeitems_list'
