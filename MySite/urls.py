@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
+from ims import views
 
 urlpatterns = [
     url(r'^ims/', include('ims.urls')),

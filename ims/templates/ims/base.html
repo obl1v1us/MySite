@@ -27,7 +27,7 @@
             </table>
             <ul>
             {% if user.is_authenticated %}
-                <li>User: {{ user.get_username }}</li>
+                <li>User: <a href="{% url 'ims:account_update' user.pk %}">{{ user.get_username }}</a></li>
                 <li><a href="{% url 'logout'%}?next={{request.path}}">Logout</a></li>   
             {% else %}
                 <li><a href="{% url 'login'%}?next={{request.path}}">Login</a></li>   

@@ -23,7 +23,7 @@
             {% for item in item_list %}
             <div class="row"><tr>
                 <td>{{ item.sku }}</td>
-                <td><a href="">{{ item }}</a></td>
+                <td><a href="{% url 'ims:itemdetail' item.sku %}">{{ item }}</a></td>
                 <td>${{ item.cost }}</td>
                 <td>{{ item.description }}</td>
             </tr></div>

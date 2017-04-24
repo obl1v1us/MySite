@@ -80,15 +80,15 @@ class ManagerView(generic.ListView):
 
 # Use this to grant each manager the ability to change their own names
 @login_required() # only logged in users should access this
-def edit_manager(request, pk):
-    # querying the User object with pk from url
-    user = User.objects.get(pk=pk)
+def edit_manager(request, manager_id):
+    # querying the User object with manager_id from url
+    user = User.objects.get(id=manager_id)
 
-    # prepopulate UserProfileForm with retrieved user values from above.
+    # prepopulate UserForm with retrieved user values from above.
     user_form = UserForm(instance=user)
 
     # Use inlineformset to include the user and manager in the same formset
-    ManagerInlineFormset = inlineformset_factory(User, Manager)
+    ManagerInlineFormset = inlineformset_factory(User, Manager, fields=('hire_date',))
     formset = ManagerInlineFormset(instance=user)
 
     if request.user.is_authenticated() and request.user.id == user.id:
@@ -106,11 +106,11 @@ def edit_manager(request, pk):
                 if formset.is_valid():
                     created_user.save()
                     formset.save()
-                    return HttpResponseRedirect('/accounts/profile/')
+                    return HttpResponseRedirect('/ims/stores/')
 
-        return render(request, "account/account_update.html", {
-            "noodle": pk,
-            "noodle_form": user_form,
+        return render(request, "ims/managerupdate.html", {
+            "manager_id": manager_id,
+            "user_form": user_form,
             "formset": formset,
         })
     else:
